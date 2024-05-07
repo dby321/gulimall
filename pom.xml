@@ -24,7 +24,7 @@
     <module>gulimall-order</module>
     <module>gulimall-product</module>
     <module>gulimall-ware</module>
-
+    <module>gulimall-common</module>
   </modules>
   <dependencies>
 
