@@ -3,7 +3,10 @@ package com.atguigu.gulimall.member.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.atguigu.gulimall.member.feign.CouponFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,11 +28,30 @@ import com.atguigu.common.utils.R;
  * @date 2024-05-07 13:23:58
  */
 @RestController
+@RefreshScope
 @RequestMapping("member/member")
 public class MemberController {
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private CouponFeignClient couponFeignClient;
 
+    @Value("${coupon.user.name}")
+    private String username;
+    @Value("${coupon.user.age}")
+    private String age;
+    @RequestMapping("/coupons")
+    public R coupons(){
+        MemberEntity memberEntity=new MemberEntity();
+        memberEntity.setNickname("张三");
+        R r = couponFeignClient.memberCoupons();
+        return R.ok().put("member",memberEntity).put("coupons",r.get("coupons"));
+    }
+
+    @RequestMapping("testProperties")
+    public R testProperties(){
+        return R.ok().put("username",username).put("age",age);
+    }
     /**
      * 列表
      */
